@@ -9,6 +9,8 @@ FROM jonaskello/docker-and-compose:1.12.1-1.8.0
 RUN mkdir -p ~/.ssh && \
      [[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
 
+ADD certs/comodorsadomainvalidationsecureserverca.crt /etc/ssl/certs/
+
 # Download and install Google Cloud SDK
 RUN apk add --update make ca-certificates openssl python && \
      update-ca-certificates && \
