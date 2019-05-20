@@ -1,13 +1,10 @@
-Adds docker-compose to the [offcial docker image](https://hub.docker.com/_/docker/). 
-
-This extends jonaskello/docker-and-compose by adding Google Cloud SDK on top, making it possible to interact with Google Cloud APIs from within the build container.
+A build container with docker and docker-compose, built on Alpine 3.9 with Google Cloud SDK
 
 Can be used for docker-in-docker in GitLab like this:
 
 ```
-  image: sbrendtro/docker-and-compose-gcloud:1.12.1-1.8.0
+  image: sbrendtro/docker-and-compose-gcloud:latest
   services:
-    - docker:1.12.1-dind
+    - docker:dind
 ```
 
-Each branch in this repo corresponds to a docker image in the format [docker-version]-[docker-compose-version].

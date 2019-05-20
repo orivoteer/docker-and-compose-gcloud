@@ -1,20 +1,18 @@
-FROM jonaskello/docker-and-compose:1.12.1-1.8.0
+# Our base image will be Alpine 3.9 as provided by the cloud-sdk image
+FROM google/cloud-sdk:alpine AS base
 
-# For Docker builds disable host key checking. Be aware that by adding that
-# you are suspectible to man-in-the-middle attacks.
+# Docker
+FROM docker:latest AS docker
+LABEL image=docker
 
-# WARNING: Use this only with the Docker executor, if you use it with shell
-# you will overwrite your user's SSH config.
+# Docker Compose
+FROM docker/compose:1.24.0 AS compose
+LABEL image=compose
 
-RUN mkdir -p ~/.ssh && \
-     [[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+FROM base AS final
+COPY --from=docker   /usr/local/bin/docker-entrypoint.sh     /usr/local/bin/docker-entrypoint.sh
+COPY --from=docker   /usr/local/bin/docker           /usr/local/bin/docker
+COPY --from=compose  /usr/local/bin/docker-compose   /usr/local/bin/docker-compose
+ENTRYPOINT ["sh", "/usr/local/bin/docker-entrypoint.sh"]
 
-ADD certs/comodorsadomainvalidationsecureserverca.crt /etc/ssl/certs/
-
-# Download and install Google Cloud SDK
-RUN apk add --update make ca-certificates openssl python && \
-     update-ca-certificates && \
-     wget https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz && \
-     tar zxvf google-cloud-sdk.tar.gz && ./google-cloud-sdk/install.sh --usage-reporting=false --path-update=true && \
-     google-cloud-sdk/bin/gcloud --quiet components update
 
