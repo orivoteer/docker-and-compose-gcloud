@@ -1,3 +1,7 @@
+# Docker
+FROM docker:latest AS docker
+LABEL image=docker
+
 # Docker Compose is our base
 FROM docker/compose:1.24.0 AS compose
 ARG CLOUD_SDK_VERSION=246.0.0
@@ -22,7 +26,7 @@ RUN apk --no-cache add \
     gcloud --version
 
 VOLUME ["/root/.config"]
-
+COPY --from=docker   /usr/local/bin/docker-entrypoint.sh     /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT ["sh", "/usr/local/bin/docker-entrypoint.sh"]
 
 
