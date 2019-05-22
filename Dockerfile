@@ -8,6 +8,7 @@ LABEL image=compose
 
 # Final image, with docker entrypoint
 FROM compose AS final
+RUN apk add --update bash
 COPY --from=docker   /usr/local/bin/docker-entrypoint.sh     /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT ["sh", "/usr/local/bin/docker-entrypoint.sh"]
 
