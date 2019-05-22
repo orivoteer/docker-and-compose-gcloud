@@ -10,6 +10,8 @@ LABEL image=compose
 FROM compose AS final
 RUN apk add --update bash git curl openssl ca-certificates
 
+ENV PATH $PATH:/google-cloud-sdk/bin
+
 RUN apk add --update bash git curl openssl make ca-certificates python \
     && update-ca-certificates \
     && wget https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz \
